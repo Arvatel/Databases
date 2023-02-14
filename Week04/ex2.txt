@@ -1,0 +1,89 @@
+CREATE TABLE Specialization(
+  spec_name VARCHAR(50) PRIMARY KEY
+);
+ 
+CREATE TABLE Student (
+  student_id INTEGER PRIMARY KEY,
+  student_name VARCHAR(50),
+  native_language varchar(5),
+  takes VARCHAR(50) REFERENCES Specialization(spec_name)
+);
+
+CREATE TABLE Course (
+  course_name VARCHAR(50) PRIMARY KEY,
+  credits INTEGER
+);
+
+CREATE TABLE Enroll (
+  student_id INTEGER Not NULL, 
+  course_name VARCHAR(50) Not NULL,
+  PRIMARY KEY(student_id, course_name),
+  FOREIGN KEY(student_id) references Student(student_id),
+  FOREIGN KEY (course_name) references Course(course_name)
+);
+
+INSERT INTO `Specialization` (`spec_name`) VALUES
+  ('Robotics'),
+  ('Computer science');
+ 
+INSERT INTO `Student` (`student_id`, `student_name`, `native_language`, `takes`) VALUES
+  ('1', 'Anatoliy', 'RU', 'Computer science'),
+  ('2', 'Oleg', 'RU', 'Computer science'),
+  ('3', 'Semen', 'RU', 'Computer science'),
+  ('4', 'Evgeniy', 'RU', 'Computer science'),
+  ('5', 'Kein', 'EN', 'Computer science'),
+  ('6', 'Sovet', 'FR', 'Robotics'),
+  ('7', 'Colett', 'EN', 'Robotics'),
+  ('8', 'Greg', 'RU', 'Robotics'),
+  ('9', 'Tim', 'FR', 'Robotics'),
+  ('10', 'Sergey', 'RU', 'Robotics'),
+  ('11', 'Stas', 'EN', 'Robotics');
+  
+INSERT INTO `Course` (`course_name`, `credits`) VALUES
+  ('Introduction to AI', '2'),
+  ('Networks', '3'),
+  ('System and network administration', '5');
+
+INSERT INTO `Enroll`(`student_id`, `course_name`) VALUES 
+  (1, 'Introduction to AI'), 
+  (2, 'System and network administration'), 
+  (11, 'Networks');
+
+
+#a
+SELECT `student_id`, `student_name`
+  FROM `Student`
+  WHERE `student_id` <= 10
+
+#b
+SELECT `student_name`
+  FROM `Student`
+  WHERE `native_language` != 'RU'
+
+#c
+SELECT `student_name`
+  FROM `Student`
+  WHERE `takes` = 'Robotics'
+
+
+#d
+SELECT Course.course_name, Student.student_name
+  FROM Enroll
+  JOIN Student
+  ON Enroll.student_id = Student.student_id
+  JOIN Course
+  ON Enroll.course_name = Course.course_name
+
+  WHERE Course.credits < 3
+
+
+
+#e
+SELECT Course.course_name
+  FROM Enroll
+  JOIN Student
+  ON Enroll.student_id = Student.student_id
+  JOIN Course
+  ON Enroll.course_name = Course.course_name
+
+  WHERE Student.native_language = `EN`
